@@ -1,0 +1,12 @@
+id,module,name,file,doc,markers,status,message,duration
+code_testing/test_base.py::test_customer_table_exists,code_testing.test_base,test_customer_table_exists,code\test_base.py,Check that the CUSTOMER table exists and has rows,,passed,,0.8038365000393242
+code_testing/test_base.py::test_order_table_exists,code_testing.test_base,test_order_table_exists,code\test_base.py,Check that the ORDERS table exists and has rows,,passed,,1.1349901999346912
+code_testing/test_base.py::test_join_customer_orders,code_testing.test_base,test_join_customer_orders,code\test_base.py,Validate JOIN logic between CUSTOMER and ORDERS,,passed,,0.09323889994993806
+code_testing/test_base.py::test_total_order_price_threshold,code_testing.test_base,test_total_order_price_threshold,code\test_base.py,"Check that some orders exceed a large price (e.g., 100000)",,passed,,1.1554649998433888
+code_testing/test_loyalty.py::test_loyalty_table_exists,code_testing.test_loyalty,test_loyalty_table_exists,code\test_loyalty.py,,skipif,skipped,Skipped: Loyalty feature disabled,0.00033629988320171833
+code_testing/test_loyalty.py::test_loyalty_points_positive,code_testing.test_loyalty,test_loyalty_points_positive,code\test_loyalty.py,,skipif,skipped,Skipped: Loyalty feature disabled,0.00023459992371499538
+code_testing/test_newsletter.py::test_newsletter_table_exists,code_testing.test_newsletter,test_newsletter_table_exists,code\test_newsletter.py,,skipif,skipped,Skipped: Newsletter feature disabled,0.00014609983190894127
+code_testing/test_newsletter.py::test_email_format_valid,code_testing.test_newsletter,test_email_format_valid,code\test_newsletter.py,,skipif,skipped,Skipped: Newsletter feature disabled,0.00013700011186301708
+code_testing/test_purchase_summary.py::test_purchase_summary_table_exists,code_testing.test_purchase_summary,test_purchase_summary_table_exists,code\test_purchase_summary.py,,skipif,passed,,0.03430970013141632
+code_testing/test_purchase_summary.py::test_total_spent_positive,code_testing.test_purchase_summary,test_total_spent_positive,code\test_purchase_summary.py,,skipif,passed,,0.05442339996807277
+code_testing/test_purchase_summary.py::test_foreign_key_matches_customer,code_testing.test_purchase_summary,test_foreign_key_matches_customer,code\test_purchase_summary.py,,skipif,passed,,0.18239600001834333

@@ -1,0 +1,10 @@
+/* Selecting customers total spent
+
+Query 3A: Scalar subquery
+*/
+EXPLAIN
+SELECT C.C_CUSTKEY, C.C_NAME,
+    (SELECT SUM(O.O_TOTALPRICE)
+     FROM ORDERS O
+     WHERE O.O_CUSTKEY = C.C_CUSTKEY LIMIT 100) AS TOTAL_SPENT
+FROM CUSTOMER C;
