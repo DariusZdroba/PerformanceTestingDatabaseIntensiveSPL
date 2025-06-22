@@ -4,7 +4,6 @@ Customers that placed orders that included at least one product priced > 5000
 
 Query 4A: Nested subqueries
 */
-EXPLAIN
 SELECT C.C_CUSTKEY, C.C_NAME
 FROM CUSTOMER C
 WHERE C.C_CUSTKEY IN (

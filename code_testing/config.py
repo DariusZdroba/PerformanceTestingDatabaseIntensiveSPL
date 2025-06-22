@@ -6,7 +6,8 @@ DB_CONFIG = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': 'test'
+    'database': 'test',
+    'allow_local_infile': True
 }
 
 def get_connection():

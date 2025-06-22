@@ -1,14 +1,12 @@
-
 /*
-Customers that placed orders that included at least one product priced > 5000
+Customers that placed orders that included at least one product priced > 2000
 
 Query 4B: Multi-level JOIN
 */
-EXPLAIN
 SELECT DISTINCT C.C_CUSTKEY, C.C_NAME
 FROM CUSTOMER C
 JOIN ORDERS O ON C.C_CUSTKEY = O.O_CUSTKEY
-JOIN LINEITEM L ON O.O_ORDERKEY = L.L_ORDERKEYs
+JOIN LINEITEM L ON O.O_ORDERKEY = L.L_ORDERKEY
 JOIN PART P ON L.L_PARTKEY = P.P_PARTKEY
-WHERE P.P_RETAILPRICE > 500;
+WHERE P.P_RETAILPRICE > 2000;
 

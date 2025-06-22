@@ -13,7 +13,7 @@ def test_email_format_valid():
 
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("""
+    cursor.execute(r"""
         SELECT COUNT(*) FROM CUSTOMER_NEWSLETTER
         WHERE EMAIL NOT REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
     """)

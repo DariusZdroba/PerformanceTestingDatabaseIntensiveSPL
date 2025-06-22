@@ -3,7 +3,6 @@
 /*
 Query 1A: Simple Nested Select
 */
-EXPLAIN
 SELECT C_CUSTKEY, C_NAME
 FROM CUSTOMER
 WHERE C_CUSTKEY IN (

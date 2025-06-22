@@ -2,7 +2,6 @@
 
 Query 3A: Scalar subquery
 */
-EXPLAIN
 SELECT C.C_CUSTKEY, C.C_NAME,
     (SELECT SUM(O.O_TOTALPRICE)
      FROM ORDERS O
