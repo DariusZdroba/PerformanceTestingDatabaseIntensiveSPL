@@ -1,12 +1,11 @@
-
--- Selecting customers whose orders are > 1000
-/*
-Query 1A: Simple Nested Select
-*/
-SELECT C_CUSTKEY, C_NAME
-FROM CUSTOMER
+-- AMOEBA Experiment: Subquery Approach (Inefficient)
+-- Find customers whose total order value exceeds 100,000
+SELECT C_CUSTKEY, C_NAME, C_ACCTBAL
+FROM {CUSTOMER_TABLE}
 WHERE C_CUSTKEY IN (
     SELECT O_CUSTKEY
-    FROM ORDERS
-    WHERE O_TOTALPRICE > 100000
-);
+    FROM {ORDERS_TABLE}
+    WHERE O_CUSTKEY = C_CUSTKEY
+    AND O_TOTALPRICE > 100000
+)
+ORDER BY C_ACCTBAL DESC;

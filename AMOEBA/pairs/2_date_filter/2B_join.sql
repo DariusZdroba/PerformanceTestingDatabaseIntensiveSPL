@@ -1,10 +1,9 @@
-/*
-Selecting customers whose orders were created after a specific date.
-
-Query 2B: Using JOIN
-*/
-SELECT DISTINCT C.C_CUSTKEY, C.C_NAME
-FROM CUSTOMER C
-JOIN ORDERS O ON C.C_CUSTKEY = O.O_CUSTKEY
-WHERE O.O_ORDERDATE > '1996-01-01';
+-- AMOEBA Experiment: JOIN Approach (Efficient)
+-- Find customers with recent orders (after 1995)
+SELECT DISTINCT C.C_CUSTKEY, C.C_NAME, C.C_MKTSEGMENT
+FROM {CUSTOMER_TABLE} C
+INNER JOIN {ORDERS_TABLE} O ON C.C_CUSTKEY = O.O_CUSTKEY
+WHERE O.O_ORDERDATE >= '1995-01-01'
+AND O.O_TOTALPRICE > 50000
+ORDER BY C.C_CUSTKEY;
 

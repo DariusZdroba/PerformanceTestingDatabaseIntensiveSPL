@@ -1,11 +1,12 @@
-/*
-Selecting customers whose orders were created after a specific date.
-
-Query 2A: Using EXISTS
-*/
-SELECT C.C_CUSTKEY, C.C_NAME
-FROM CUSTOMER C
+-- AMOEBA Experiment: EXISTS Subquery Approach (Inefficient)
+-- Find customers with recent orders (after 1995)
+SELECT C_CUSTKEY, C_NAME, C_MKTSEGMENT
+FROM {CUSTOMER_TABLE}
 WHERE EXISTS (
-    SELECT 1 FROM ORDERS O
-    WHERE O.O_CUSTKEY = C.C_CUSTKEY AND O.O_ORDERDATE > '1996-01-01'
-);
+    SELECT 1
+    FROM {ORDERS_TABLE}
+    WHERE O_CUSTKEY = C_CUSTKEY
+    AND O_ORDERDATE >= '1995-01-01'
+    AND O_TOTALPRICE > 50000
+)
+ORDER BY C_CUSTKEY;
