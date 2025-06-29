@@ -1,6 +1,6 @@
 import mysql.connector
 
-FEATURE_VARIANT = 'purchase'
+FEATURE_VARIANT = 'full'
 
 DB_CONFIG = {
     'host': 'localhost',

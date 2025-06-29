@@ -13,10 +13,16 @@ def test_email_format_valid():
 
     conn = get_connection()
     cursor = conn.cursor()
+    # Use LIMIT to make the test faster on large tables
     cursor.execute(r"""
-        SELECT COUNT(*) FROM CUSTOMER_NEWSLETTER
-        WHERE EMAIL NOT REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
+        SELECT COUNT(*) FROM (
+            SELECT EMAIL FROM CUSTOMER_NEWSLETTER 
+            WHERE EMAIL NOT REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
+            LIMIT 100
+        ) AS invalid_emails
     """)
     invalid_count = cursor.fetchone()[0]
     conn.close()
-    assert invalid_count == 0, f"{invalid_count} emails have invalid format"
+    assert invalid_count == 0, f"{invalid_count} emails have invalid format (checked first 100)"
+
+

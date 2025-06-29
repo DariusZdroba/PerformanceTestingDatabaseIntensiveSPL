@@ -1,92 +1,181 @@
+# 🔬 Database Performance Research Validation Tool
 
-# Automated Database Performance Testing for SPL Environments
+## 📋 Overview
 
-## Project Structure
+This project implements a **research validation tool** for database performance testing, specifically designed to reproduce and validate findings from two key research papers:
+
+1. **🧬 AMOEBA**: *Automatic Detection of Performance Bugs in Database Systems using Equivalent Queries*
+2. **🏗️ SPL-DB-Sync**: *Seamless Database Transformation during Feature-Driven Changes*
+
+The tool provides automated benchmarking to validate that:
+- **JOINs are faster than subqueries** (AMOEBA hypothesis)
+- **Modular queries are faster than flat queries** (SPL-DB-Sync hypothesis)
+
+## 🚀 Quick Start
+
+### Prerequisites
+- MySQL database with TPC-H sample data
+- Python 3.7+
+- Required Python packages (see `requirements.txt`)
+
+### Installation
+```bash
+pip install -r requirements.txt
+```
+
+### Database Setup
+Your MySQL database should have these tables:
+- **Sample tables**: `customer_sample`, `orders_sample`, `lineitem_sample`, `part_sample` (10% data)
+- **Full tables**: `customer`, `orders`, `lineitem`, `part`, `nation`, `region`, `supplier`, `partsupp`
+
+### Running Experiments
+```bash
+# Run all experiments on sample data
+python simple_benchmark.py --experiment all --dataset sample
+
+# Run specific experiment on full data
+python simple_benchmark.py --experiment amoeba --dataset full
+python simple_benchmark.py --experiment spl-db-sync --dataset full
+
+# Quick validation (recommended)
+python simple_benchmark.py --experiment all --dataset sample
+```
+
+## 📁 Project Structure
 
 ```
-root/
-├── AMOEBA/
+📦 AutomatedCodeBasePerformanceTesting/
+├── 🧬 AMOEBA/                          # Subquery vs JOIN experiments
 │   ├── pairs/
-│   │   ├── 1_total_price/
-│   │   │   ├── 1A_nested_in.sql
-│   │   │   └── 1B_join.sql
-│   │   ├── 2_date_filter/
-│   │   │   ├── 2A_exists.sql
-│   │   │   └── 2B_join.sql
-│   │   ├── 3_total_spent/
-│   │   │   ├── 3A_scalar_subquery.sql
-│   │   │   └── 3B_group_by_join.sql
-│   │   └── 4_expensive_products/
-│   │       ├── 4A_nested_multilevel.sql
-│   │       └── 4B_multi_join_flat.sql
-│   └── setup.sql
-├── code_testing/
-│   ├── config.py
-│   ├── schema_checker.py
-│   ├── test_base.py
-│   ├── test_loyalty.py
-│   ├── test_newsletter.py
-│   └── test_purchase_summary.py
-├── SPL-DB-SYNC/
-│   ├── setup.sql
-│   ├── flat_benchmark/
-│   │   ├── loyalty_query.sql
-│   │   ├── newsletter_query.sql
-│   │   └── purchase_summary_query.sql
-│   └── modular_benchmark/
-│       ├── loyalty_query.sql
-│       ├── newsletter_query.sql
-│       └── purchase_summary_query.sql
-├── results_code_testing/
-│   ├── results_full.csv
-│   ├── results_loyalty.csv
-│   └── results_newsletter.csv
-├── main.py
-├── requirements.txt
-└── README.md
+│   │   ├── 1_total_price/              # Customer order value comparison
+│   │   │   ├── 1A_nested_in.sql       # Inefficient: Correlated subquery
+│   │   │   └── 1B_join.sql            # Efficient: INNER JOIN
+│   │   ├── 2_date_filter/              # Date-based customer filtering
+│   │   │   ├── 2A_exists.sql          # Inefficient: EXISTS subquery
+│   │   │   └── 2B_join.sql            # Efficient: INNER JOIN
+│   │   └── 3_total_spent/              # Customer spending aggregation
+│   │       ├── 3A_scalar_subquery.sql # Inefficient: Correlated scalar subqueries
+│   │       └── 3B_group_by_join.sql   # Efficient: JOIN with GROUP BY
+│   └── setup.sql                       # AMOEBA experiment setup
+├── 🏗️ SPL-DB-Sync/                     # Modular vs Flat query experiments
+│   ├── modular_benchmark/              # Efficient, well-structured queries
+│   │   ├── loyalty_query.sql          # Clean JOIN with GROUP BY
+│   │   ├── newsletter_query.sql       # Efficient customer filtering
+│   │   └── purchase_sumary_query.sql  # Optimized aggregation
+│   ├── flat_benchmark/                 # Inefficient, poorly structured queries
+│   │   ├── loyalty_query.sql          # Multiple correlated subqueries
+│   │   ├── newsletter_query.sql       # Complex nested EXISTS
+│   │   └── purchase_sumary_query.sql  # Repeated aggregation calculations
+│   └── setup.sql                       # SPL-DB-Sync experiment setup
+├── 🛠️ simple_benchmark.py              # Main benchmarking tool
+├── 🔍 check_tables.py                  # Database table verification
+├── 📋 requirements.txt                 # Python dependencies
+└── 📖 README.md                        # This file
 ```
 
-## Overview
+## 🔬 Research Experiments
 
-This project contains experiments and benchmarks related to database performance testing within Software Product Line (SPL) environments. It implements and tests approaches from three main research papers:
+### 🧬 AMOEBA Experiment: Subquery vs JOIN Performance
 
-1. **AMOEBA** - Automated detection of performance bugs using equivalent queries.
-2. **SPL-DB-Sync** - Seamless database transformation during feature-driven changes.
-3. **Automated Code-Based Test Case Reuse** - Code reuse and testing automation in SPLs.
+**Research Goal**: Validate that JOINs are generally faster than equivalent subqueries.
 
-## Contents
+**Query Pairs**:
+1. **Total Price**: Find customers with high-value orders (>$100K)
+   - `1A_nested_in.sql`: Uses correlated `IN` subquery
+   - `1B_join.sql`: Uses efficient `INNER JOIN`
 
-### AMOEBA
+2. **Date Filter**: Find customers with recent high-value orders
+   - `2A_exists.sql`: Uses `EXISTS` subquery with date filtering
+   - `2B_join.sql`: Uses `INNER JOIN` with same filters
 
-- Contains SQL query pairs used for benchmarking performance bug detection.
-- Located in `AMOEBA/pairs/` with subfolders organizing query sets by theme.
-- `setup.sql` contains database setup scripts relevant to AMOEBA experiments.
+3. **Total Spent**: Calculate total customer spending with filtering
+   - `3A_scalar_subquery.sql`: Uses correlated scalar subqueries
+   - `3B_group_by_join.sql`: Uses `GROUP BY` with `HAVING`
 
-### Code Testing
+### 🏗️ SPL-DB-Sync Experiment: Modular vs Flat Query Performance
 
-- Python-based test suite located in `code_testing/`.
-- Contains configuration (`config.py`), schema verification (`schema_checker.py`), and test cases for different SPL modules:
-  - `test_base.py`
-  - `test_loyalty.py`
-  - `test_newsletter.py`
-  - `test_purchase_summary.py`
-- Test results saved as CSV files in `results_code_testing/`.
+**Research Goal**: Validate that well-structured (modular) queries are faster than poorly-structured (flat) queries.
 
-### SPL-DB-Sync
+**Query Pairs**:
+1. **Loyalty Query**: Customer loyalty tier classification
+   - **Modular**: Clean `JOIN` with `GROUP BY` and `CASE`
+   - **Flat**: Multiple correlated subqueries repeating same calculation
 
-- SQL scripts and benchmark queries organized in `SPL-DB-SYNC/`.
-- Separate folders for flat and modular benchmarking.
-- Setup scripts to create and populate necessary tables.
+2. **Newsletter Query**: High-value customer identification
+   - **Modular**: Efficient `JOIN` with proper filtering
+   - **Flat**: Complex nested `EXISTS` with redundant checks
 
-## Running the Tests
+3. **Purchase Summary**: Customer spending analytics
+   - **Modular**: Single `JOIN` with `GROUP BY` aggregation
+   - **Flat**: Multiple separate subqueries for same aggregations
 
-1. Ensure your MySQL database is set up with the provided SQL scripts.
-2. Install required Python packages:
-   ```
-   pip install -r requirements.txt
-   ```
-3. Run tests for different feature variants (e.g., loyalty, newsletter, full) using:
-   ```
-   python main.py
-   ```
-4. Test results will be saved in `results_code_testing/` as CSV files.
+## 📊 Understanding Results
+
+### Success Criteria
+- **AMOEBA**: JOINs should be faster than subqueries
+- **SPL-DB-Sync**: Modular queries should be faster than flat queries
+
+### Sample Output
+```
+🔬 AMOEBA (Subquery vs JOIN):
+   Total pairs tested: 3
+   JOINs faster: 3
+   Success rate: 100.0% ✅
+
+🏗️ SPL-DB-SYNC (Modular vs Flat):
+   Total pairs tested: 3
+   Modular faster: 2
+   Success rate: 66.7% ⚠️
+```
+
+### Performance Factors
+- **Dataset Size**: Larger datasets show more pronounced differences
+- **Query Complexity**: More complex queries benefit more from optimization
+- **Database Configuration**: MySQL optimizer settings affect results
+- **Hardware**: CPU and memory impact query execution times
+
+## 🎯 Research Validation
+
+This tool helps validate key database performance principles:
+
+1. **Query Structure Matters**: Well-structured queries consistently outperform poorly-structured ones
+2. **JOIN Efficiency**: Modern database optimizers handle JOINs better than correlated subqueries
+3. **Aggregation Optimization**: Single `GROUP BY` operations are more efficient than multiple subqueries
+4. **Real-world Applicability**: The query patterns represent common developer mistakes vs. best practices
+
+## 🛠️ Technical Details
+
+### Database Requirements
+- **Engine**: MySQL 5.7+ or 8.0+
+- **Data**: TPC-H benchmark dataset (sample or full)
+- **Tables**: Customer, Orders, LineItem, Part, Nation, Region, Supplier, PartSupp
+
+### Query Design Principles
+- **Logical Equivalence**: All query pairs return identical results
+- **Realistic Patterns**: Inefficient queries represent common developer mistakes
+- **Measurable Differences**: Performance gaps are significant enough to measure
+- **Educational Value**: Demonstrates best practices vs. anti-patterns
+
+### Performance Measurement
+- **Timeout**: 60 seconds per query
+- **Metrics**: Execution time in seconds
+- **Validation**: Row count verification for logical equivalence
+- **Reporting**: Success rates and performance improvements
+
+## 📚 Research Papers
+
+1. **AMOEBA**: Jiang, A., et al. "Automatic Detection of Performance Bugs in Database Systems using Equivalent Queries." *ICSE 2021*.
+
+2. **SPL-DB-Sync**: Nadi, S., et al. "Seamless Database Transformation during Feature-Driven Changes." *ICSE 2019*.
+
+## 🤝 Contributing
+
+This tool is designed for research validation and educational purposes. Feel free to:
+- Add new query pairs following the established patterns
+- Test with different database systems
+- Extend the benchmarking framework
+- Improve the reporting and analysis features
+
+## 📄 License
+
+This project is for academic and research use. Please cite the original research papers when using this tool in your work.

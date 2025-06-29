@@ -13,7 +13,10 @@ def test_loyalty_points_positive():
 
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) FROM CUSTOMER_LOYALTY WHERE POINTS >= 0")
+    # Use LIMIT to make test faster on large tables
+    cursor.execute("SELECT COUNT(*) FROM (SELECT POINTS FROM CUSTOMER_LOYALTY WHERE POINTS >= 0 LIMIT 100) AS sample")
     count = cursor.fetchone()[0]
-    assert count > 0, "No positive loyalty points found"
     conn.close()
+    assert count > 0, "No positive loyalty points found (checked first 100)"
+
+
