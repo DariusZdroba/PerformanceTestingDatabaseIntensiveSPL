@@ -6,10 +6,12 @@ This project implements a **research validation tool** for database performance 
 
 1. **🧬 AMOEBA**: *Automatic Detection of Performance Bugs in Database Systems using Equivalent Queries*
 2. **🏗️ SPL-DB-Sync**: *Seamless Database Transformation during Feature-Driven Changes*
+3. **🏗️ Act-SPL**: *Automated code-based test case reuse for software product line testing*
 
 The tool provides automated benchmarking to validate that:
 - **JOINs are faster than subqueries** (AMOEBA hypothesis)
 - **Modular queries are faster than flat queries** (SPL-DB-Sync hypothesis)
+- **Code-based test reuse improves efficiency of SPL validation** (ActSPL hypothesis)
 
 ## 🚀 Quick Start
 
