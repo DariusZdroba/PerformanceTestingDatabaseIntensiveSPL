@@ -170,6 +170,9 @@ This tool helps validate key database performance principles:
 
 2. **SPL-DB-Sync**: Nadi, S., et al. "Seamless Database Transformation during Feature-Driven Changes." *ICSE 2019*.
 
+3. **ActSPL**: Pilsu N., Seonah L., Uicheon L., "Automated code-based test case reuse for software product line testing  *ICSE 2023*
+"
+
 ## 🤝 Contributing
 
 This tool is designed for research validation and educational purposes. Feel free to:
